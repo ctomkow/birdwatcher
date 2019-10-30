@@ -191,3 +191,24 @@ func PeerRoutes(r *http.Request, ps httprouter.Params, useCache bool) (bird.Pars
 
 	return bird.RoutesPeer(useCache, peer)
 }
+
+// TODO: this tested good!
+func TableRoutesPrefixed(r *http.Request, ps httprouter.Params, useCache bool) (bird.Parsed, bool) {
+	table, err := ValidateProtocolParam(ps.ByName("table"))
+	if err != nil {
+		return bird.Parsed{"error": fmt.Sprintf("%s", err)}, false
+	}
+
+	qs := r.URL.Query()
+	prefixl := qs["prefix"]
+	if len(prefixl) != 1 {
+		return bird.Parsed{"error": "need a prefix as single query parameter"}, false
+	}
+
+	prefix, err := ValidatePrefixParam(prefixl[0])
+	if err != nil {
+		return bird.Parsed{"error": fmt.Sprintf("%s", err)}, false
+	}
+
+	return bird.RoutesTablePrefixed(useCache, table, prefix)
+}

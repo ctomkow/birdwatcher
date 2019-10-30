@@ -510,6 +510,18 @@ func RoutesLookupProtocol(useCache bool, net string, protocol string) (Parsed, b
 		nil)
 }
 
+func RoutesTablePrefixed(useCache bool, table string, prefix string) (Parsed, bool) {
+	// TODO: hmm, it looks right but it's only returning a single route!!!
+	table = remapTable(table)
+	cmd := routesQuery("table " + table + " " + prefix + " all")
+	return RunAndParse(
+		useCache,
+		GetCacheKey("RoutesTable", table),
+		cmd,
+		parseRoutes,
+		nil)
+}
+
 func getBirdVersion() int {
 	// We assume the bird major version does not change during
 	// the time the birdwatcher is running.

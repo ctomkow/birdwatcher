@@ -97,6 +97,9 @@ func makeRouter(config endpoints.ServerConfig) *httprouter.Router {
 	if isModuleEnabled("routes_pipe_filtered", whitelist) {
 		r.GET("/routes/pipe/filtered", endpoints.Endpoint(endpoints.PipeRoutesFiltered))
 	}
+	if isModuleEnabled("routes_table_prefixed", whitelist) {
+		r.GET("/routes/table/:table/prefix", endpoints.Endpoint(endpoints.TableRoutesPrefixed))
+	}
 
 	return r
 }
